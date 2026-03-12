@@ -1,423 +1,288 @@
-# Campus Pinduoduo: Safe-Buy Escrow System
+# Campus Pinduoduo Android App
 
-## ✅ System Status: Production Ready & Fully Tested
+Complete Android interface for the Campus Pinduoduo group shopping and escrow platform.
 
-**All core functionality is complete, tested, and verified working.**
-- Backend: Python escrow system with Flask REST API
-- Tests: 100% pass rate on all scenarios  
-- Database: Supabase PostgreSQL schema ready
-- Documentation: Comprehensive guides included
+## 📱 Features
+
+### Core Functionality
+- **Product Browsing**: Browse all products with filtering by category, brand, and price
+- **Shopping Cart**: Add items to cart with budget tracking
+- **Budget Management**: Real-time display of remaining pool budget
+- **Order Placement**: Place orders with moderator verification
+- **Order Tracking**: Track order status and delivery confirmation
+- **User Profile**: Manage user information and view statistics
+
+### Technical Stack
+- **Language**: Kotlin
+- **Architecture**: MVVM (Model-View-ViewModel)
+- **UI Framework**: AndroidX
+- **Networking**: Retrofit 2 with OkHttp
+- **Serialization**: Gson
+- **Lifecycle**: LiveData & ViewModel
 
 ## 📂 Project Structure
 
 ```
-campus-pinduoduo/
-│
-├── 📘 DOCUMENTATION (Complete)
-│   ├── README.md                    ⭐ This file - Quick start guide
-│   ├── SYSTEM_SUMMARY.md            Complete test results & architecture
-│   ├── PROJECT_SUMMARY.md           Executive summary
-│   ├── IMPLEMENTATION_GUIDE.md      Developer reference (500+ lines)
-│   ├── PAYMENT_FLOW_VISUAL.md       ASCII diagrams of fund flows
-│   ├── QUICKSTART_CHECKLIST.md      6-8 week deployment plan
-│   └── .env.example                 Configuration template
-│
-├── 🐍 RUNNABLE PYTHON CODE (Tested ✅)
-│   ├── escrow_demo.py               Main system logic (433 lines) - RUN THIS FIRST
-│   ├── test_scenarios.py            Edge case tests (241 lines) - All passing
-│   ├── test_api.py                  API endpoint tests - All passing
-│   ├── api_server.py                Flask REST API (284 lines, 7 endpoints)
-│   └── requirements.txt              Dependencies
-│
-├── 🗄️ DATABASE FILES (Ready for Supabase)
-│   ├── database_schema.sql          10 tables, foreign keys, indexes
-│   └── rls_policies.sql             Security & data isolation policies
-│
-└── 🧠 LOGIC REFERENCE
-    └── payment_flow_logic.py        500+ lines of pseudocode reference
+android/
+├── app/
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/com/campuspinduoduo/
+│   │   │   │   ├── ui/
+│   │   │   │   │   ├── activities/          # Screen implementations
+│   │   │   │   │   ├── fragments/          # Fragment components
+│   │   │   │   │   └── adapters/           # RecyclerView adapters
+│   │   │   │   ├── viewmodel/              # ViewModel classes
+│   │   │   │   ├── api/                    # Retrofit API service
+│   │   │   │   └── model/                  # Data models
+│   │   │   ├── res/
+│   │   │   │   ├── layout/                 # XML layouts
+│   │   │   │   ├── values/                 # Resources (strings, colors)
+│   │   │   │   ├── menu/                   # Menu definitions
+│   │   │   │   └── drawable/               # Drawable resources
+│   │   │   └── AndroidManifest.xml
+│   │   └── test/                           # Unit tests
+│   └── build.gradle
+├── build.gradle
+└── settings.gradle
 ```
 
----
+## 🚀 Getting Started
 
-## 🚀 Quick Start (Choose Your Path)
+### Prerequisites
+- Android Studio 2022.3 or later
+- Android SDK 24 (min) - 34 (target)
+- Kotlin 1.9+
+- Gradle 8.1+
 
-### Path 1: See The System In Action (5 minutes)
+### Installation
+
+1. **Clone the repository**
 ```bash
-python escrow_demo.py
+git clone <repository_url>
+cd android
 ```
-**See:** Complete payment flow from deposit → automatic fund release
-**Shows:** Pool creation, deposits, locking, delivery, confirmations, release
 
-### Path 2: Run Complete Test Suite (5 minutes)
+2. **Open in Android Studio**
+   - File → Open → Select the `android` folder
+   - Let Gradle sync automatically
+
+3. **Configure API Endpoint**
+   - Edit `api/RetrofitClient.kt`
+   - Change `BASE_URL` to your backend server:
+   ```kotlin
+   // For emulator: http://10.0.2.2:5000/
+   // For real device: http://<YOUR_SERVER_IP>:5000/
+   private const val BASE_URL = "http://10.0.2.2:5000/"
+   ```
+
+4. **Build & Run**
+   - Connect Android device or start emulator
+   - Click "Run" or press `Shift + F10`
+
+## 📱 Activities & Screens
+
+### MainActivity
+- **Purpose**: Product catalog and shopping
+- **Features**:
+  - Search products by name
+  - Filter by category
+  - Grid view of products (2 columns)
+  - Navigation to cart and orders
+
+### ProductDetailActivity
+- **Purpose**: Detailed product information
+- **Features**:
+  - Full product description
+  - Rating and reviews
+  - Available quantity
+  - Add to cart with quantity selector
+
+### CartActivity
+- **Purpose**: Review and manage shopping cart
+- **Features**:
+  - List of cart items
+  - Item quantities and prices
+  - Remove items
+  - Budget remaining display
+  - Checkout button
+
+### CheckoutActivity
+- **Purpose**: Complete the order
+- **Features**:
+  - Order summary
+  - Budget information
+  - Moderator ID verification
+  - Order confirmation
+
+### OrderTrackingActivity
+- **Purpose**: Track order status
+- **Features**:
+  - List of user orders
+  - Order status display
+  - Order dates and amounts
+  - Delivery tracking
+
+### ProfileActivity
+- **Purpose**: User account management
+- **Features**:
+  - Edit name, email, phone
+  - View order history stats
+  - View total spent
+  - View user rating
+
+## 🔌 API Integration
+
+### Configured Endpoints
+
+**Product Endpoints**
+- `GET /api/store/products` - List all products
+- `GET /api/store/products/{id}` - Product details
+- `GET /api/store/categories` - List categories
+
+**Cart Endpoints**
+- `GET /api/store/cart/{pool_id}` - Get cart
+- `POST /api/store/cart/{pool_id}/add` - Add item
+- `POST /api/store/cart/{pool_id}/remove` - Remove item
+- `POST /api/store/cart/{pool_id}/clear` - Clear cart
+
+**Order Endpoints**
+- `POST /api/store/orders/place` - Place order
+- `GET /api/store/orders/{order_id}` - Get order details
+- `GET /api/store/orders/user/{user_id}` - User orders
+- `POST /api/store/delivery/{order_id}/confirm` - Confirm delivery
+
+**Pool Endpoints**
+- `GET /api/pools` - List all pools
+- `GET /api/pools/{pool_id}` - Pool details
+- `POST /api/pools/{pool_id}/join` - Join pool
+
+## 🎨 UI/UX Design
+
+### Color Scheme
+- **Primary**: #1F77D2 (Blue)
+- **Accent**: #FF6B35 (Orange)
+- **Price**: #D32F2F (Red)
+- **Success**: #4CAF50 (Green)
+
+### Layouts
+- Product Grid: 2-column responsive layout
+- Lists: LinearLayout with RecyclerView
+- Details: ScrollView for overflow content
+- Forms: Input validation with error messages
+
+## 📦 Dependencies
+
+### Build Tools
+- Gradle: 8.1.0
+- Android Gradle Plugin: 8.1.0
+
+### Libraries
+- AndroidX AppCompat: 1.6.1
+- Material Design: 1.9.0
+- Retrofit 2: 2.9.0
+- Gson: 2.10.1
+- OkHttp: 4.11.0
+- Lifecycle Components: 2.6.1
+- RecyclerView: 1.3.1
+- Glide (for images): 4.15.1
+
+## 🔐 Security Considerations
+
+1. **API Communication**
+   - Use HTTPS in production
+   - Implement certificate pinning for sensitive data
+
+2. **Data Storage**
+   - Store tokens securely in SharedPreferences with encryption
+   - Avoid storing sensitive data in plain text
+
+3. **Authentication**
+   - Implement JWT token-based authentication
+   - Auto-refresh tokens before expiration
+
+## 🧪 Testing
+
+### Run Unit Tests
 ```bash
-python test_scenarios.py
+./gradlew test
 ```
-**See:** 4 test scenarios covering all edge cases
-**Tests:** Refunds, threshold detection, multi-pool balance verification
 
-### Path 3: Test REST API Endpoints (5 minutes)
+### Run Instrumentation Tests
 ```bash
-python test_api.py
-```
-**See:** All 7 REST API endpoints in action
-**Tests:** Health check, pools, deposits, confirmations, ledger, users, stats
-
----
-
-## 📊 What's Working (Verified Test Results)
-
-### Latest API Test Results
-```
-✅ All 10 tests PASSED
-
-[TEST 1]  GET /api/health                    200 ✅
-[TEST 2]  GET /api/pools                     200 ✅
-[TEST 3]  GET /api/pools/<id>                200 ✅
-[TEST 4]  POST /api/pools/<id>/join          201 ✅
-[TEST 5]  POST /api/pools/<id>/confirm       200 ✅
-[TEST 6]  GET /api/escrow/ledger             200 ✅
-[TEST 7]  GET /api/users                     200 ✅
-[TEST 8]  GET /api/stats                     200 ✅
-[TEST 9]  Error Handling (404)               200 ✅
-[TEST 10] Invalid Endpoint                   200 ✅
+./gradlew connectedAndroidTest
 ```
 
-### Sample Escrow Flow Tested
-```
-5 Students → ₦50,000 Pool Goal → Pool Lockedֿ
-↓
-Moderator distributes items → Status: in_delivery (money HELD)
-↓
-Students confirm receipt with PIN:
-  Damilare ✅ (1/3 confirmations = 33%)
-  Tunde ✅ (2/3 confirmations = 67%)
-  Zainab ✅ (3/3 confirmations = 100% > 70% threshold!)
-↓
-✅ AUTOMATIC FUND RELEASE TRIGGERED
-₦50,000 → Moderator (minus commission)
-Escrow Balance: ₦0 (Perfect accounting)
-```
+## 📥 Building for Release
 
-
----
-
-## 💰 How The Escrow System Works
-
-### The Problem
-Traditional group buying on Pinduoduo = student pays moderator upfront = student loses money if moderator doesn't deliver
-
-### The Solution: Safe-Lock Escrow
-**Money is held in escrow until delivery is verified**
-
-```
-STUDENT                ESCROW                 MODERATOR
-(Paystack)            (SafeBox)               (Bank Account)
-
-  │
-  ├─→ Deposit ₦10,000  ──→ HELD                    (money NOT in moderator's account)
-  │   (gets PIN 123456)
-  │
-  ├─→ Item Delivered   ──→ Status: in_delivery    (money still HELD)
-  │   (mod provides PIN)
-  │
-  ├─→ Confirms PIN     ──→ Marked confirmed (1/3)
-  │   #123456
-  │
-  ├─→ 70%+ Confirmed   ──→ RELEASE ₦50,000  ──→  Moderator receives funds
-  │   (automatic)              - Commission ₦5,000 (10%)
-  │   (no manual review!)       = ₦45,000 to moderator
-  │
-  └─→ Escrow Balance: ₦0 ✅ (perfect accounting)
-```
-
-### Key Security Features
-
-| Feature | Why It Matters | How It Works |
-|---------|---|---|
-| **Escrow Hold** | Money never goes to moderator until verified | Fund held by payment provider | 
-| **70% Threshold** | Auto-release without waiting for all students | Majority rules - no unanimous requirement |
-| **PIN Verification** | Proves actual delivery occurred | Student must enter PIN moderator provided |
-| **Immutable Ledger** | No deletion/tampering of records | Database enforces read-only transactions |
-| **Auto Refund** | No moderator can keep incomplete pools | System triggers refund if deadline passes |
-| **Balance Verification** | Every ₦ is accounted for | Sum of deposits always equals releases + refunds |
-
----
-
-## 🔧 REST API Reference
-
-### 1. Health Check
 ```bash
-curl http://localhost:5000/api/health
-```
-**Response:** Service running status
+# Build signed APK
+./gradlew bundleRelease
 
-### 2. List Pools
-```bash
-curl http://localhost:5000/api/pools
-```
-**Response:** All active pools with progress
-
-### 3. Pool Details
-```bash
-curl http://localhost:5000/api/pools/{pool_id}
-```
-**Response:** Pool info + all participants
-
-### 4. Join Pool (Student Deposits)
-```bash
-curl -X POST http://localhost:5000/api/pools/{pool_id}/join \
-  -H "Content-Type: application/json" \
-  -d '{"student_id": "student_123"}'
-```
-**Response:** Confirmation PIN + escrow status
-
-### 5. Confirm Receipt (Delivery Verification)
-```bash
-curl -X POST http://localhost:5000/api/pools/{pool_id}/confirm-receipt \
-  -H "Content-Type: application/json" \
-  -d '{"student_id": "student_123", "pin": "910808"}'
-```
-**Response:** Total confirmations received (e.g., "2/5 = 40%")
-
-### 6. Escrow Ledger (Transaction History)
-```bash
-curl http://localhost:5000/api/escrow/ledger?pool_id={pool_id}
-```
-**Response:** All fund movements (deposits, releases, refunds)
-
-### 7. System Statistics
-```bash
-curl http://localhost:5000/api/stats
-```
-**Response:** Total pools, users, transactions, and financials
-
----
-
-## 🗄️ Database Overview
-
-### 10 Tables (Supabase PostgreSQL)
-
-| Table | Purpose | Key Fields |
-|-------|---------|---|
-| profiles | User identity | id, name, balance, is_moderator |
-| purchase_pools | Pool details | id, goal, raised, status, moderator_id |
-| pool_participants | Student participation | pool_id, participant_id, amount, PIN |
-| escrow_transactions | **IMMUTABLE fund ledger** | id, type, amount, escrow_status, timestamp |
-| milestone_verifications | Delivery confirmations | pool_id, participant_id, confirmed, timestamp |
-| moderator_commissions | Commission tracking | amount, percentage, pool_id |
-| refund_queue | Pending refunds | pool_id, student_id, amount |
-| disputes | Conflict resolution | pool_id, description, status |
-| activity_log | Audit trail | user_id, action, timestamp |
-| campuses | University data | id, name, location |
-
-### Key Security: escrow_transactions Table
-- **Immutable**: Database triggers prevent deletes/updates
-- **Complete History**: Every fund movement recorded
-- **Proof of Integrity**: Audit trail for disputes
-- **Balance Verification**: Sum always equals deposits-releases-refunds
-
----
-
-## 📋 Code Files Explained
-
-### escrow_demo.py (433 lines)
-**What it does:** Interactive demonstration of complete payment flow
-**Main Classes:**
-- `EscrowSystem` - Main controller managing all operations
-- `User` - Student/Moderator profiles with balances
-- `PurchasePool` - Pool state machine (open → locked → completed/refunded)
-- `PoolParticipant` - Student participation tracking
-- `EscrowTransaction` - Fund movement record
-
-**Key Functions:**
-- `create_pool()` - Create pool with goal
-- `student_joins_pool()` - Deposit + escrow creation
-- `lock_pool()` - Auto-lock when goal reached
-- `release_funds_to_moderator()` - Release at 70% threshold
-- `process_refunds_for_expired_pool()` - Auto-refund if goal not met
-
-**Run:** `python escrow_demo.py`
-
-### test_scenarios.py (241 lines)
-**What it does:** Test all edge cases and failure modes
-**Test Cases:**
-1. ✅ Automatic refund (goal not met)
-2. ✅ 70% threshold confirmation
-3. ✅ 80%+ confirmation (early release)
-4. ✅ Multi-pool balance verification
-
-**All tests passing:** 100% success rate
-
-**Run:** `python test_scenarios.py`
-
-### api_server.py (284 lines)
-**What it does:** Flask REST API for integration testing
-**Endpoints:** 7 REST routes
-**Status:** Ready for production deployment
-**Requirements:** Flask 3.1.3 (installed ✅)
-
-**Run:** `python api_server.py` → http://localhost:5000
-
-### test_api.py (~160 lines)
-**What it does:** Test all API endpoints
-**Tests:** All 7 endpoints + error handling
-**Status:** All passing ✅
-
-**Run:** `python test_api.py`
-
----
-
-## 📚 Documentation Files
-
-| File | Purpose | Read Time |
-|------|---------|-----------|
-| **README.md** | This file - Quick start | 10 min |
-| **SYSTEM_SUMMARY.md** | Complete architecture & test results | 15 min |
-| **PROJECT_SUMMARY.md** | Executive summary | 5 min |
-| **IMPLEMENTATION_GUIDE.md** | Developer reference with code examples | 30 min |
-| **PAYMENT_FLOW_VISUAL.md** | ASCII diagrams of fund flows | 10 min |
-| **QUICKSTART_CHECKLIST.md** | 6-8 week deployment timeline | 20 min |
-
----
-
-## ⚡ Installation
-
-### Requirements
-- Python 3.14.3+
-- Flask 3.1.3
-
-### Quick Setup
-```bash
-# 1. Install dependencies
-pip install flask requests
-
-# 2. Run the demo
-python escrow_demo.py
-
-# 3. View the tests
-python test_scenarios.py
-
-# 4. Test the API
-python test_api.py
+# Build APK
+./gradlew assembleRelease
 ```
 
----
+## 🤝 Integration with Backend
 
-## ✨ Key Stats
+The Android app is fully integrated with the Campus Pinduoduo backend:
 
-| Metric | Value |
-|--------|-------|
-| Total Lines of Code | 2,250+ |
-| Test Coverage | 100% (all scenarios) |
-| Pass Rate | 100% (all tests) |
-| API Endpoints | 7 (all working) |
-| Database Tables | 10 (ready for Supabase) |
-| Documentation | 2,000+ lines |
-| Status | **Production Ready** |
+1. **Product Management**: Browse products persisted in backend database
+2. **Cart Management**: Server-side validation of budget constraints
+3. **Order Processing**: Complete order lifecycle tracking
+4. **Delivery Confirmation**: PIN-based delivery verification
+5. **Escrow System**: Automatic fund release on confirmation threshold
 
----
+## 📝 Configuration
 
-## 🎯 Next Steps
-
-### For Testing
-1. Run `python escrow_demo.py` to see the system work
-2. Run `python test_scenarios.py` to verify edge cases
-3. Run `python test_api.py` to test REST endpoints
-4. Review [SYSTEM_SUMMARY.md](SYSTEM_SUMMARY.md) for detailed results
-
-### For Development  
-1. Read [IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md)
-2. Review [database_schema.sql](database_schema.sql)
-3. Implement Paystack/Flutterwave integration (see guide)
-4. Build Flutter mobile app frontend
-
-### For Deployment
-1. Follow [QUICKSTART_CHECKLIST.md](QUICKSTART_CHECKLIST.md)
-2. Deploy database schema to Supabase
-3. Integrate payment gateways
-4. Launch beta to campuses
-
----
-
-## 💬 Quick Reference
-
-**What is escrow?** Money held by neutral third party until conditions are met
-**What is 70% threshold?** Funds release automatically when 70%+ of students confirm
-**Why PIN verification?** Proof that items were actually delivered
-**Why immutable ledger?** Prevent fraud by making fund movements permanent
-**Why automatic refund?** Prevent moderators from keeping incomplete pool money
-
----
-
-## ✅ Status Summary
-
-- [x] Core escrow logic implemented
-- [x] State machine working correctly
-- [x] PIN verification system
-- [x] 70% threshold detection
-- [x] Automatic fund release
-- [x] Automatic refunds
-- [x] REST API (7 endpoints)
-- [x] All tests passing (100%)
-- [x] Database schema complete
-- [x] Security policies defined
-- [x] Documentation comprehensive
-- [x] **Ready for production deployment**
-
----
-
-**Last Updated:** 2026-03-11  
-**Status:** ✅ Production Ready  
-**Next Step:** Run `python escrow_demo.py` to see it in action!
-
-Before deploying to production, verify:
-
-- [ ] All SQL schemas executed in Supabase
-- [ ] All RLS policies enforced
-- [ ] Flask API server working locally
-- [ ] Paystack test account created
-- [ ] Flutterwave test account created
-- [ ] Payment test cards working
-- [ ] Webhook endpoints receiving callbacks
-- [ ] SMS notifications configured
-- [ ] Push notifications working
-- [ ] Full E2E test completed with live payments
-
----
-
-## 📞 Quick Reference
-
-### Run Demo:
-```bash
-python escrow_demo.py
+### Server Configuration
+Update `RetrofitClient.kt`:
+```kotlin
+private const val BASE_URL = "http://your-server-ip:5000/"
 ```
 
-### Run Tests:
-```bash
-python test_scenarios.py
+### Timeouts
+```kotlin
+.connectTimeout(30, TimeUnit.SECONDS)
+.readTimeout(30, TimeUnit.SECONDS)
+.writeTimeout(30, TimeUnit.SECONDS)
 ```
 
-### Start API:
-```bash
-python api_server.py
-```
+## 🐛 Troubleshooting
 
-### View Docs:
-- Overview: [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md)
-- Implementation: [IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md)
-- Diagrams: [PAYMENT_FLOW_VISUAL.md](PAYMENT_FLOW_VISUAL.md)
-- Timeline: [QUICKSTART_CHECKLIST.md](QUICKSTART_CHECKLIST.md)
+### App crashes on startup
+- Check `BASE_URL` in `RetrofitClient.kt`
+- Ensure backend server is running
+- Verify network connectivity
 
----
+### Cart not loading
+- Enable network logging: Check logcat for API responses
+- Verify pool ID is set correctly
 
-## 🎉 Summary
+### Order placement fails
+- Check moderator ID format
+- Ensure budget is sufficient
+- Verify backend order service is running
 
-✅ **Complete escrow system created**
-✅ **5+ test scenarios passed**
-✅ **Production-ready code**
-✅ **Professional documentation**
-✅ **Ready for Supabase deployment**
+## 📞 Support
 
-**Your Campus Pinduoduo is now ready to scale!** 🚀
+For issues or questions:
+1. Check the backend API documentation
+2. Review logcat for detailed error messages
+3. Verify network connectivity
+4. Check backend server status
 
-Created March 11, 2026
+## 📄 License
+
+Campus Pinduoduo Android App - All Rights Reserved
+
+## 🎯 Future Enhancements
+
+- [ ] Biometric authentication (fingerprint/face)
+- [ ] Push notifications for order updates
+- [ ] In-app messaging between moderator and members
+- [ ] Payment gateway integration
+- [ ] Splash screen and onboarding
+- [ ] Offline mode with sync
+- [ ] Widget for quick cart access
+- [ ] Dark mode support
